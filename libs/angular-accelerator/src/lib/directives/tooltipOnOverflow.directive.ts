@@ -9,10 +9,11 @@ import {
   ViewContainerRef,
   inject,
 } from '@angular/core'
-import { Tooltip, TooltipStyle } from 'primeng/tooltip'
+import { TooltipStyle } from 'primeng/tooltip'
+import { OcxTooltipDirective } from './ocx-tooltip.directive'
 
 @Directive({ selector: '[ocxTooltipOnOverflow]', standalone: false, providers: [TooltipStyle] })
-export class TooltipOnOverflowDirective extends Tooltip implements OnDestroy, AfterViewInit {
+export class TooltipOnOverflowDirective extends OcxTooltipDirective implements OnDestroy, AfterViewInit {
   mutationObserver = new MutationObserver(() => {
     this.zone.run(() => {
       this.disabled = this.el.nativeElement.scrollWidth <= this.el.nativeElement.offsetWidth
@@ -47,11 +48,11 @@ export class TooltipOnOverflowDirective extends Tooltip implements OnDestroy, Af
     }, 0)
   }
   constructor() {
-    const zone = inject(NgZone)
+    // const zone = inject(NgZone)
     const renderer = inject(Renderer2)
-    const viewContainer = inject(ViewContainerRef)
+    // const viewContainer = inject(ViewContainerRef)
 
-    super(zone, viewContainer)
+    super()
     renderer.setStyle(this.el.nativeElement, 'text-overflow', 'ellipsis')
     renderer.setStyle(this.el.nativeElement, 'overflow', 'hidden')
     renderer.setStyle(this.el.nativeElement, 'white-space', 'nowrap')

@@ -21,6 +21,7 @@ import { PageHeaderHarness, provideTranslateTestingService, TestbedHarnessEnviro
 import { AngularAcceleratorModule } from '../../angular-accelerator.module'
 import { DynamicPipe } from '../../pipes/dynamic.pipe'
 import { Action, ObjectDetailItem, PageHeaderComponent } from './page-header.component'
+import { OcxTooltipDirective } from '../../directives/ocx-tooltip.directive'
 
 const mockActions: Action[] = [
   {
@@ -59,7 +60,7 @@ describe('PageHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PageHeaderComponent, PageHeaderComponent, DynamicPipe],
+      declarations: [PageHeaderComponent, PageHeaderComponent, DynamicPipe, OcxTooltipDirective],
       imports: [
         RouterTestingModule,
         BreadcrumbModule,
