@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, effect, inject, input, model, output, signal } from '@angular/core'
+import { Component, ElementRef, OnInit, computed, effect, inject, input, model, output, signal } from '@angular/core'
 import { ChartData, ChartOptions } from 'chart.js'
 import * as d3 from 'd3-scale-chromatic'
 import { PrimeIcons } from 'primeng/api'
@@ -76,7 +76,10 @@ export class DiagramComponent implements OnInit {
   chartOptions = signal<ChartOptions>('' as any)
   chartData = signal<ChartData | undefined>(undefined)
   amountOfData = signal<number | undefined | null>(undefined)
-  shownDiagramTypes = signal<DiagramLayouts[]>([])
+  shownDiagramTypes = computed(() => {
+    const value = this.supportedDiagramTypes()
+    return allDiagramTypes.filter((vl) => value.includes(vl.layout))
+  })
   // Changing the colorRangeInfo, will change the range of the color palette of the diagram.
   private colorRangeInfo = {
     colorStart: 0,
@@ -92,11 +95,6 @@ export class DiagramComponent implements OnInit {
       const value = this.diagramType()
       this.selectedDiagramType.set(allDiagramTypes.find((v) => v.layout === value))
       this.chartType.set(this.diagramTypeToChartType(value))
-    })
-
-    effect(() => {
-      const value = this.supportedDiagramTypes()
-      this.shownDiagramTypes.set(allDiagramTypes.filter((vl) => value.includes(vl.layout)))
     })
 
     effect(() => {
