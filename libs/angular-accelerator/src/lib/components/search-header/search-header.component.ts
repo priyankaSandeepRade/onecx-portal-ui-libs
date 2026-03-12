@@ -51,7 +51,7 @@ export interface SearchConfigData {
 export class SearchHeaderComponent {
   header = input<string>('')
   subheader = input<string | undefined>(undefined)
-
+  noResults = input<boolean>(false)
   viewMode = model<'basic' | 'advanced'>('basic')
 
   manualBreadcrumbs = input<boolean>(false)

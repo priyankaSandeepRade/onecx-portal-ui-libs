@@ -1,11 +1,11 @@
-import { Component, computed, effect, input, model, output, signal } from '@angular/core'
+import { Component, ElementRef, OnInit, computed, effect, inject, input, model, output, signal } from '@angular/core'
 import { ChartData, ChartOptions } from 'chart.js'
 import * as d3 from 'd3-scale-chromatic'
 import { PrimeIcons } from 'primeng/api'
 import { DiagramData } from '../../model/diagram-data'
 import { DiagramType } from '../../model/diagram-type'
-import { ColorUtils } from '../../utils/colorutils'
 import { PrimeIcon } from '../../utils/primeicon.utils'
+import { ColorUtils } from '../../utils/color.utils'
 
 export interface DiagramLayouts {
   id: string
@@ -56,6 +56,8 @@ const allDiagramTypes: DiagramLayouts[] = [
 export class DiagramComponent {
   data = input<DiagramData[] | undefined>(undefined)
   sumKey = input<string>('OCX_DIAGRAM.SUM')
+  chartTitleKey = input<string>('')
+  chartDescriptionKey = input<string>('')
   fullHeight = input<boolean>(false)
   /**
    * This property determines if diagram should generate the colors for the data that does not have any set.
@@ -91,6 +93,7 @@ export class DiagramComponent {
   }
   // Changing the colorScale, will change the thematic color appearance of the diagram.
   private colorScale = d3.interpolateCool
+  private el = inject(ElementRef)
 
   constructor() {
     effect(() => {
