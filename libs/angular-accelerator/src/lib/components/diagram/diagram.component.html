@@ -11,8 +11,14 @@
 
 @if (data()) { @if (shownDiagramTypes().length > 1) {
 <div class="flex justify-content-center pb-2">
-  <p-selectbutton [options]="shownDiagramTypes()" [(ngModel)]="selectedDiagramType" optionLabel="id"
-    (onChange)="onDiagramTypeChanged($event)" name="diagram-type-select-button" [allowEmpty]="false">
+  <p-selectbutton
+    [options]="shownDiagramTypes()"
+    [ngModel]="selectedDiagramType()"
+    optionLabel="id"
+    (onChange)="onDiagramTypeChanged($event)"
+    name="diagram-type-select-button"
+    [allowEmpty]="false"
+  >
     <ng-template #item let-item>
       <i [class]="item.icon" [pTooltip]="item.tooltipKey | translate" tooltipPosition="top" tooltipEvent="hover"></i>
       <label id="{{item.id}}" class="sr-only"> {{item.label ? item.label : item.labelKey | translate}} </label>
@@ -20,12 +26,12 @@
   </p-selectbutton>
 </div>
 }
-<div class="w-full flex justify-content-center diagram__container">
+<div class="w-full flex justify-content-center diagram__container" [ngClass]="{'h-full': useFullHeight()}">
   <div id="short-description" class="sr-only">{{ chartDescriptionKey()! | translate }}. {{ 'OCX_DIAGRAM.TABLE_DETAILS' | translate }}</div>
   <p-chart id="diagram" 
     [type]="chartType()" 
     [data]="chartData()" 
-    [responsive]="false"
+    [responsive]="useFullHeight()"
     [attr.data-automation-options]="chartOptions()" 
     [attr.aria-labelledby]="chartTitleKey() ? 'diagram-title' : null"
     [attr.aria-describedby]="'short-description'"

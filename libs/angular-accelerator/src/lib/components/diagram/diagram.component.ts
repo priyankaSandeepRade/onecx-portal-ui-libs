@@ -21,6 +21,8 @@ export interface DiagramComponentState {
   activeDiagramType?: DiagramType
 }
 
+export type ChartType = 'bar' | 'line' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar'
+
 const allDiagramTypes: DiagramLayouts[] = [
   {
     id: 'diagram-pie',
@@ -51,11 +53,12 @@ const allDiagramTypes: DiagramLayouts[] = [
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss'],
 })
-export class DiagramComponent implements OnInit {
+export class DiagramComponent {
   data = input<DiagramData[] | undefined>(undefined)
   sumKey = input<string>('OCX_DIAGRAM.SUM')
   chartTitleKey = input<string>('')
   chartDescriptionKey = input<string>('')
+  fullHeight = input<boolean>(false)
   /**
    * This property determines if diagram should generate the colors for the data that does not have any set.
    *
@@ -63,23 +66,25 @@ export class DiagramComponent implements OnInit {
    */
   fillMissingColors = input<boolean>(true)
 
-  selectedDiagramType = signal<DiagramLayouts | undefined>(undefined)
-  public chartType = signal<'bar' | 'line' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar'>('pie')
-
   diagramType = model<DiagramType>(DiagramType.PIE)
 
   supportedDiagramTypes = input<DiagramType[]>([])
 
+  selectedDiagramType = computed(() => allDiagramTypes.find((v) => v.layout === this.diagramType()))
+  chartType = computed(() => this.diagramTypeToChartType(this.diagramType()))
   dataSelected = output<any>()
   diagramTypeChanged = output<DiagramType>()
   componentStateChanged = output<DiagramComponentState>()
-  chartOptions = signal<ChartOptions>('' as any)
+  chartOptions = signal<ChartOptions>({})
   chartData = signal<ChartData | undefined>(undefined)
   amountOfData = signal<number | undefined | null>(undefined)
-  shownDiagramTypes = computed(() => {
-    const value = this.supportedDiagramTypes()
-    return allDiagramTypes.filter((vl) => value.includes(vl.layout))
-  })
+  shownDiagramTypes = computed(() => 
+    allDiagramTypes.filter((vl) => this.supportedDiagramTypes().includes(vl.layout))
+  )
+  // enabled for only pie chart as it contains legends which are hidden
+  useFullHeight = computed(() =>
+    this.diagramType() === DiagramType.PIE && this.fullHeight()
+  )
   // Changing the colorRangeInfo, will change the range of the color palette of the diagram.
   private colorRangeInfo = {
     colorStart: 0,
@@ -92,37 +97,26 @@ export class DiagramComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const value = this.diagramType()
-      this.selectedDiagramType.set(allDiagramTypes.find((v) => v.layout === value))
-      this.chartType.set(this.diagramTypeToChartType(value))
-    })
-
-    effect(() => {
       this.generateChart(this.colorScale, this.colorRangeInfo)
     })
   }
 
-  ngOnInit(): void {
-    this.generateChart(this.colorScale, this.colorRangeInfo)
-  }
-
   public generateChart(colorScale: any, colorRangeInfo: any) {
     const data = this.data()
-    if (data) {
-      const inputData = data.map((diagramData) => diagramData.value)
+    if (!data) return
+    const inputData = data.map((diagramData) => diagramData.value)
 
-      this.amountOfData.set(data.reduce((acc, current) => acc + current.value, 0))
-      const COLORS = this.generateColors(data, colorScale, colorRangeInfo)
-      this.chartData.set({
-        labels: data.map((d) => d.label),
-        datasets: [
-          {
-            data: inputData,
-            backgroundColor: COLORS,
-          },
-        ],
-      })
-    }
+    this.amountOfData.set(data.reduce((acc, current) => acc + current.value, 0))
+    const COLORS = this.generateColors(data, colorScale, colorRangeInfo)
+    this.chartData.set({
+      labels: data.map((d) => d.label),
+      datasets: [
+        {
+          data: inputData,
+          backgroundColor: COLORS,
+        },
+      ],
+    })
 
     this.chartOptions.set({
       plugins: {
@@ -149,11 +143,11 @@ export class DiagramComponent implements OnInit {
       return dataColors
     } else if (this.fillMissingColors()) {
       // it is intended to generate more colors than needed, so interval for generated colors is same as amount of items on the diagram
-      const interpolatedColors = interpolateColors(dataColors.length, colorScale, colorRangeInfo, this.el.nativeElement)
+      const interpolatedColors = interpolateColors(dataColors.length, colorScale, colorRangeInfo)
       let interpolatedIndex = 0
       return dataColors.map((color) => (color === undefined ? interpolatedColors[interpolatedIndex++] : color))
     } else {
-      return interpolateColors(data.length, colorScale, colorRangeInfo, this.el.nativeElement)
+      return interpolateColors(data.length, colorScale, colorRangeInfo)
     }
   }
 
@@ -165,12 +159,10 @@ export class DiagramComponent implements OnInit {
     return data.map((item) => `${item.label}:${item.value}`).join(', ')
   }
 
-  private diagramTypeToChartType(
-    value: DiagramType
-  ): 'bar' | 'line' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar' {
+  private diagramTypeToChartType(value: DiagramType): ChartType {
     if (value === DiagramType.PIE) return 'pie'
     else if (value === DiagramType.HORIZONTAL_BAR || value === DiagramType.VERTICAL_BAR) return 'bar'
-    return 'pie'
+    else return 'pie'
   }
 
   dataClicked(event: []) {
@@ -179,15 +171,12 @@ export class DiagramComponent implements OnInit {
 
   onDiagramTypeChanged(event: any) {
     this.diagramType.set(event.value.layout)
-    this.generateChart(this.colorScale, this.colorRangeInfo)
     this.diagramTypeChanged.emit(event.value.layout)
     this.componentStateChanged.emit({
       activeDiagramType: event.value.layout,
     })
   }
 }
-function interpolateColors(amountOfData: number, colorScale: any, colorRangeInfo: any, element?: HTMLElement): string[] {
-  const bgColor = element ? window.getComputedStyle(element).backgroundColor : undefined;
-  const fallback = element ? getComputedStyle(element).getPropertyValue('--p-onecx-body-bg-color').trim() : '#ffffff';
-  return ColorUtils.interpolateColors(amountOfData, colorScale, colorRangeInfo, bgColor || fallback)
+function interpolateColors(amountOfData: number, colorScale: any, colorRangeInfo: any) {
+  return ColorUtils.interpolateColors(amountOfData, colorScale, colorRangeInfo)
 }
