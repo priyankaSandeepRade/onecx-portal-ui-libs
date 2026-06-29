@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { withRef } from "./primitives";
 import { themeSchemaRegistry } from "./registry";
+import { withRef } from "./primitives/refs";
 
 export const fontWithDefaults = z
   .object({

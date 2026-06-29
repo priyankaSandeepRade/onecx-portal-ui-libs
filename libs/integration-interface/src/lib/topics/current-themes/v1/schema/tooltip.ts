@@ -2,8 +2,11 @@
  * This file defines the schema for tooltip theming. It, by default, uses primitives for default values but allows overriding any of them with custom values.
  */
 import * as z from "zod";
-import { bg, border, color, withRef } from "./primitives";
 import { themeSchemaRegistry } from "./registry";
+import { withRef } from "./primitives/refs";
+import { border } from "./primitives/tokens/border";
+import { color } from "./primitives/tokens/color";
+import { bg } from "./primitives/tokens/bg";
 
 export const tooltipSettings = z
   .object({

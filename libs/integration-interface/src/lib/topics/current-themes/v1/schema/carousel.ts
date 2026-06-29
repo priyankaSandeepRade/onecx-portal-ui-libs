@@ -2,8 +2,12 @@
  * This file defines the schema for carousel theming. It, by default, uses primitives for default values but allows overriding any of them with custom values.
  */
 import * as z from "zod";
-import { bg, bgContrast, border, borderWithShadow, color, withRef } from "./primitives";
 import { themeSchemaRegistry } from "./registry";
+import { withRef } from "./primitives/refs";
+import { border, borderWithShadow } from "./primitives/tokens/border";
+import { color } from "./primitives/tokens/color";
+import { bgContrast } from "./primitives/variants/severity";
+import { bg } from "./primitives/tokens/bg";
 
 export const carouselSettings = z
   .object({

@@ -1,11 +1,11 @@
 import * as z from "zod";
 import { dialog } from "./schema/dialog";
-import { primitives } from "./schema/primitives";
 import { region } from "./schema/region";
 import { table } from "./schema/table";
 import { tooltip } from "./schema/tooltip";
 import { carousel } from "./schema/carousel";
 import { themeSchemaRegistry } from "./schema/registry";
+import { primitives } from "./schema/primitives/primitive";
 
 const usages = z
   .object({

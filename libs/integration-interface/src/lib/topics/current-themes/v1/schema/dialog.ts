@@ -1,6 +1,10 @@
 import * as z from "zod";
-import { bg, bgContrast, border, color, withRef } from "./primitives";
 import { themeSchemaRegistry } from "./registry";
+import { withRef } from "./primitives/refs";
+import { border } from "./primitives/tokens/border";
+import { color } from "./primitives/tokens/color";
+import { bgContrast } from "./primitives/variants/severity";
+import { bg } from "./primitives/tokens/bg";
 
 export const dialogSettings = z
   .object({
