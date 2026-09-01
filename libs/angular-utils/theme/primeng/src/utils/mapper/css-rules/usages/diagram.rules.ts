@@ -68,7 +68,7 @@ const SELECT_BUTTON_ICON: CssRule = {
   declarations: [
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.icon.color',
+      from: 'usages.diagram.selectButton.defaultVariant.defaultState.defaultSeverity.icon.color',
     },
   ],
 }
@@ -78,15 +78,15 @@ const SELECT_BUTTON: CssRule = {
   declarations: [
     {
       property: 'background-color',
-      from: 'usages.diagram.selectButton.bgContrast.bg',
+      from: 'usages.diagram.selectButton.defaultVariant.defaultState.defaultSeverity.background',
     },
     {
       property: 'border-color',
-      from: 'usages.diagram.selectButton.border',
+      from: 'usages.diagram.selectButton.defaultVariant.defaultState.defaultSeverity.border.color',
     },
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.bgContrast.contrast',
+      from: 'usages.diagram.selectButton.defaultVariant.defaultState.defaultSeverity.color',
     },
   ],
 }
@@ -96,11 +96,11 @@ const SELECT_BUTTON_STATES_HOVER: CssRule = {
   declarations: [
     {
       property: 'background-color',
-      from: 'usages.diagram.selectButton.bgContrast.bg',
+      from: 'usages.diagram.selectButton.defaultVariant.hover.defaultSeverity.background',
     },
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.bgContrast.contrast',
+      from: 'usages.diagram.selectButton.defaultVariant.hover.defaultSeverity.color',
     }
   ]
 }
@@ -110,25 +110,25 @@ const SELECT_BUTTON_STATES_ACTIVE: CssRule = {
   declarations: [
     {
       property: 'background-color',
-      from: 'usages.diagram.selectButton.bgContrast.bg',
+      from: 'usages.diagram.selectButton.defaultVariant.active.defaultSeverity.background',
     },
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.bgContrast.contrast',
+      from: 'usages.diagram.selectButton.defaultVariant.active.defaultSeverity.color',
     }
   ]
 }
 
 const SELECT_BUTTON_STATES_SELECTED: CssRule = {
-  selector: 'ocx-diagram .p-selectbutton .p-togglebutton-content:selected',
+  selector: 'ocx-diagram .p-selectbutton .p-togglebutton-content.p-highlight',
   declarations: [
     {
       property: 'background-color',
-      from: 'usages.diagram.selectButton.bgContrast.bg',
+      from: 'usages.diagram.selectButton.defaultVariant.selected.defaultSeverity.background',
     },
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.bgContrast.contrast',
+      from: 'usages.diagram.selectButton.defaultVariant.selected.defaultSeverity.color',
     }
   ]
 }
@@ -138,11 +138,11 @@ const SELECT_BUTTON_STATES_FOCUS: CssRule = {
   declarations: [
     {
       property: 'background-color',
-      from: 'usages.diagram.selectButton.bgContrast.bg',
+      from: 'usages.diagram.selectButton.defaultVariant.focus.defaultSeverity.background',
     },
     {
       property: 'color',
-      from: 'usages.diagram.selectButton.bgContrast.contrast',
+      from: 'usages.diagram.selectButton.defaultVariant.focus.defaultSeverity.color',
     }
   ]
 }
