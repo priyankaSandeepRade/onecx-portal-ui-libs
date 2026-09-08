@@ -11,7 +11,7 @@ import { toggleswitch } from './schema/toggleswitch'
 import { tabs } from './schema/tabs'
 import { themeSchemaRegistry } from './schema/registry'
 import { fieldset } from './schema/fieldset'
-import { diagram } from './schema/diagram'
+import { diagram, type DiagramInput } from './schema/diagram'
 import { dropdown } from './schema/dropdown'
 import { textarea } from './schema/textarea'
 import { input } from './schema/input'
@@ -35,7 +35,7 @@ type UsagesInput = {
   tooltip?: z.input<typeof tooltip>
   carousel?: z.input<typeof carousel>
   fieldset?: z.input<typeof fieldset>
-  diagram?: z.input<typeof diagram>
+  diagram?: DiagramInput
   dropdown?: z.input<typeof dropdown>
   tabs?: z.input<typeof tabs>
   toggleswitch?: z.input<typeof toggleswitch>
